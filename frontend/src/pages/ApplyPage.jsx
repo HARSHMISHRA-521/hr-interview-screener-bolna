@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { User, Mail, Phone, ArrowRight, CheckCircle } from 'lucide-react';
+import { User, Mail, Phone, ArrowRight, CheckCircle, Sparkles, ShieldCheck, UserCircle2 } from 'lucide-react';
 
-const ApplyPage = () => {
+const ApplyPage = ({ theme }) => {
+    const isDark = theme === 'dark';
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -21,7 +22,6 @@ const ApplyPage = () => {
         setErrorMessage('');
 
         try {
-            // Assuming standard local port for backend is 3000
             const response = await axios.post('http://localhost:3000/api/candidates/apply', formData);
             if (response.data.success) {
                 setStatus('success');
@@ -38,22 +38,40 @@ const ApplyPage = () => {
 
     if (status === 'success') {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg text-center border-t-4 border-green-500">
-                    <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-4" />
-                    <h2 className="text-3xl font-extrabold text-gray-900">Application Submitted!</h2>
-                    <p className="mt-2 text-md text-gray-600">
-                        Thank you, {formData.name}. Our AI Recruiter will call you shortly at <strong>{formData.phone}</strong> for a brief screening interview.
+            <div className="flex-1 w-full flex items-center justify-center p-4 sm:p-6 py-8">
+                <div className={`max-w-md w-full p-8 sm:p-10 rounded-2xl text-center border-t-4 transform transition-all hover:scale-[1.02] duration-300 relative overflow-hidden ${isDark ? 'glass-card-dark border-emerald-500/50 shadow-[0_0_40px_rgba(16,185,129,0.15)]' : 'glass-card-light border-emerald-400 shadow-[0_10px_40px_-10px_rgba(52,211,153,0.3)]'}`}>
+                    {isDark && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-32 bg-emerald-500/20 rounded-full blur-3xl"></div>}
+
+                    <div className={`mx-auto w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mb-5 sm:mb-6 relative z-10 ${isDark ? 'bg-emerald-500/10 border border-emerald-500/20' : 'bg-emerald-50 border border-emerald-100 shadow-inner'}`}>
+                        <CheckCircle className={`h-8 w-8 sm:h-10 sm:w-10 ${isDark ? 'text-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.5)]' : 'text-emerald-500'}`} />
+                    </div>
+
+                    <h2 className={`text-2xl sm:text-3xl font-extrabold mb-2 sm:mb-3 tracking-tight relative z-10 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                        Application Sent!
+                    </h2>
+
+                    <p className={`mt-2 text-sm sm:text-base leading-relaxed relative z-10 px-2 sm:px-0 ${isDark ? 'text-slate-300' : 'text-gray-600'}`}>
+                        Thank you, <span className={`font-semibold ${isDark ? 'text-white' : 'text-indigo-700'}`}>{formData.name}</span>.
+                        <br />
+                        Our <span className={`font-bold ${isDark ? 'text-cyan-400' : 'text-indigo-600'}`}>HMC Recruiter Agent</span> will call you shortly on:
                     </p>
-                    <div className="mt-6">
+
+                    <div className="my-5 sm:my-6 relative z-10">
+                        <span className={`inline-block px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-mono text-base sm:text-lg tracking-wider border transition-colors ${isDark ? 'bg-slate-800/80 text-cyan-400 border-slate-700 shadow-inner' : 'bg-indigo-50 text-indigo-800 border-indigo-100 shadow-sm'}`}>
+                            {formData.phone}
+                        </span>
+                    </div>
+
+                    <div className="mt-6 sm:mt-8 relative z-10">
                         <button
                             onClick={() => {
                                 setStatus('idle');
                                 setFormData({ name: '', email: '', phone: '' });
                             }}
-                            className="text-indigo-600 hover:text-indigo-500 font-medium"
+                            className={`group text-sm sm:text-base font-bold tracking-wide transition-colors flex items-center justify-center w-full bg-transparent border-none ${isDark ? 'text-slate-400 hover:text-white' : 'text-indigo-500 hover:text-indigo-700'}`}
                         >
                             Submit another application
+                            <ArrowRight className="ml-1.5 sm:ml-2 w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                         </button>
                     </div>
                 </div>
@@ -62,95 +80,119 @@ const ApplyPage = () => {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg border-t-4 border-indigo-600">
-                <div>
-                    <h2 className="mt-2 text-center text-3xl font-extrabold text-gray-900">
-                        Join Our Team
-                    </h2>
-                    <p className="mt-2 text-center text-sm text-gray-600">
-                        Apply below and complete an instant AI phone screen.
-                    </p>
-                </div>
+        <div className="flex-1 w-full flex items-center justify-center p-4 sm:p-6 lg:p-8 py-8 lg:py-10">
+            <div className={`w-full max-w-md rounded-3xl overflow-hidden relative ${isDark ? 'glass-card-dark border border-slate-700/50 shadow-[0_0_50px_rgba(99,102,241,0.15)]' : 'glass-card-light border border-white/80 shadow-[0_20px_60px_-15px_rgba(99,102,241,0.25)]'}`}>
+                <div className="p-6 sm:p-8 relative">
 
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                    {status === 'error' && (
-                        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4 rounded-md">
-                            <p className="text-sm text-red-700">{errorMessage}</p>
-                        </div>
+                    {isDark ? (
+                        <>
+                            <div className="absolute -top-16 -left-16 sm:-top-20 sm:-left-20 w-32 h-32 sm:w-40 sm:h-40 bg-indigo-500/20 rounded-full blur-[40px] sm:blur-[50px] pointer-events-none w-full max-w-full"></div>
+                            <div className="absolute -bottom-16 -right-16 sm:-bottom-20 sm:-right-20 w-32 h-32 sm:w-40 sm:h-40 bg-cyan-500/20 rounded-full blur-[40px] sm:blur-[50px] pointer-events-none"></div>
+                        </>
+                    ) : (
+                        <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-b from-indigo-50/50 to-transparent pointer-events-none"></div>
                     )}
 
-                    <div className="rounded-md shadow-sm space-y-4">
-                        <div>
-                            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Full Name</label>
-                            <div className="mt-1 relative rounded-md shadow-sm">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <User className="h-5 w-5 text-gray-400" />
-                                </div>
-                                <input
-                                    id="name"
-                                    name="name"
-                                    type="text"
-                                    required
-                                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-3 border"
-                                    placeholder="John Doe"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                />
+                    <div className="text-center mb-6 sm:mb-8 relative z-10 w-full">
+                        <div className="flex justify-center mb-4">
+                            <div className={`inline-flex items-center justify-center p-3 sm:p-4 rounded-2xl border shadow-inner ${isDark ? 'bg-slate-800/50 border-slate-700' : 'bg-white border-indigo-50'}`}>
+                                <UserCircle2 className={`h-8 w-8 sm:h-10 sm:w-10 ${isDark ? 'text-cyan-400' : 'text-indigo-500'}`} />
+                                <Sparkles className={`absolute top-0 right-0 -mr-1 -mt-1 sm:-mr-2 sm:-mt-2 h-4 w-4 sm:h-5 sm:w-5 ${isDark ? 'text-indigo-400' : 'text-purple-400'}`} />
                             </div>
                         </div>
 
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
-                            <div className="mt-1 relative rounded-md shadow-sm">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Mail className="h-5 w-5 text-gray-400" />
-                                </div>
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    required
-                                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-3 border"
-                                    placeholder="john@example.com"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                        </div>
-
-                        <div>
-                            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">Phone Number (with Country Code)</label>
-                            <div className="mt-1 relative rounded-md shadow-sm">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Phone className="h-5 w-5 text-gray-400" />
-                                </div>
-                                <input
-                                    id="phone"
-                                    name="phone"
-                                    type="tel"
-                                    required
-                                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-3 border"
-                                    placeholder="+1234567890"
-                                    value={formData.phone}
-                                    onChange={handleChange}
-                                />
-                            </div>
-                            <p className="mt-1 text-xs text-gray-500">Important: Must include country code for the AI to call you (e.g., +1).</p>
-                        </div>
+                        <h2 className={`text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight mb-2 ${isDark ? 'text-white' : 'text-gray-900'}`}>
+                            Candidate Form
+                        </h2>
+                        <p className={`text-sm sm:text-base font-medium px-2 sm:px-4 ${isDark ? 'text-slate-400' : 'text-gray-500'}`}>
+                            Enter details below to receive an instant screening call from our <strong className={isDark ? 'text-cyan-400 font-bold' : 'text-indigo-600 font-bold'}>HMC Recruiter</strong>.
+                        </p>
                     </div>
 
-                    <div>
-                        <button
-                            type="submit"
-                            disabled={status === 'loading'}
-                            className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-70 transition-colors"
-                        >
-                            {status === 'loading' ? 'Submitting...' : 'Apply Now'}
-                            {!status === 'loading' && <ArrowRight className="ml-2 h-5 w-5" />}
-                        </button>
-                    </div>
-                </form>
+                    <form className="space-y-5 relative z-10 w-full" onSubmit={handleSubmit}>
+                        {status === 'error' && (
+                            <div className={`border p-3 sm:p-4 rounded-xl flex items-start space-x-2 sm:space-x-3 ${isDark ? 'bg-red-500/10 border-red-500/30' : 'bg-red-50 border-red-200 shadow-sm'}`}>
+                                <ShieldCheck className={`w-5 h-5 flex-shrink-0 mt-0.5 ${isDark ? 'text-red-400' : 'text-red-500'}`} />
+                                <p className={`text-sm font-medium ${isDark ? 'text-red-300' : 'text-red-700'}`}>{errorMessage}</p>
+                            </div>
+                        )}
+
+                        <div className="space-y-4">
+                            <div>
+                                <label className={`block text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-1.5 ml-1 ${isDark ? 'text-slate-400' : 'text-gray-500'}`}>Full Name</label>
+                                <div className="relative group">
+                                    <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                                        <User className={`h-5 w-5 transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-cyan-400' : 'text-gray-400 group-focus-within:text-indigo-500'}`} />
+                                    </div>
+                                    <input
+                                        name="name"
+                                        type="text"
+                                        required
+                                        className={`block w-full pl-10 sm:pl-11 pr-3 sm:pr-4 py-3 sm:py-3.5 text-sm sm:text-base rounded-xl transition-all shadow-inner outline-none focus:ring-2 ${isDark ? 'bg-[#0f1021]/60 border border-slate-700 text-white focus:ring-cyan-500/50 focus:border-cyan-500 placeholder-slate-600' : 'bg-gray-50/80 border border-gray-200 text-gray-900 focus:ring-indigo-500/30 focus:border-indigo-500 placeholder-gray-400 hover:bg-white'}`}
+                                        placeholder="e.g. John Doe"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className={`block text-[11px] sm:text-xs font-bold uppercase tracking-wider mb-1.5 ml-1 ${isDark ? 'text-slate-400' : 'text-gray-500'}`}>Email Address</label>
+                                <div className="relative group">
+                                    <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                                        <Mail className={`h-5 w-5 transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-cyan-400' : 'text-gray-400 group-focus-within:text-indigo-500'}`} />
+                                    </div>
+                                    <input
+                                        name="email"
+                                        type="email"
+                                        required
+                                        className={`block w-full pl-10 sm:pl-11 pr-3 sm:pr-4 py-3 sm:py-3.5 text-sm sm:text-base rounded-xl transition-all shadow-inner outline-none focus:ring-2 ${isDark ? 'bg-[#0f1021]/60 border border-slate-700 text-white focus:ring-cyan-500/50 focus:border-cyan-500 placeholder-slate-600' : 'bg-gray-50/80 border border-gray-200 text-gray-900 focus:ring-indigo-500/30 focus:border-indigo-500 placeholder-gray-400 hover:bg-white'}`}
+                                        placeholder="john@example.com"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <div className="flex justify-between items-end mb-1.5 ml-1">
+                                    <label className={`block text-[11px] sm:text-xs font-bold uppercase tracking-wider ${isDark ? 'text-slate-400' : 'text-gray-500'}`}>Phone Number</label>
+                                    <span className={`text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded border ${isDark ? 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20' : 'text-indigo-600 bg-indigo-50 border-indigo-100'}`}>+ Country Code</span>
+                                </div>
+                                <div className="relative group">
+                                    <div className="absolute inset-y-0 left-0 pl-3 sm:pl-4 flex items-center pointer-events-none">
+                                        <Phone className={`h-5 w-5 transition-colors ${isDark ? 'text-slate-500 group-focus-within:text-cyan-400' : 'text-gray-400 group-focus-within:text-indigo-500'}`} />
+                                    </div>
+                                    <input
+                                        name="phone"
+                                        type="tel"
+                                        required
+                                        className={`block w-full pl-10 sm:pl-11 pr-3 sm:pr-4 py-3 sm:py-3.5 text-sm sm:text-base rounded-xl transition-all shadow-inner outline-none font-mono tracking-wide focus:ring-2 ${isDark ? 'bg-[#0f1021]/60 border border-slate-700 text-white focus:ring-cyan-500/50 focus:border-cyan-500 placeholder-slate-600' : 'bg-gray-50/80 border border-gray-200 text-gray-900 focus:ring-indigo-500/30 focus:border-indigo-500 placeholder-gray-400 hover:bg-white'}`}
+                                        placeholder="+1 234 567 8900"
+                                        value={formData.phone}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="pt-4">
+                            <button
+                                type="submit"
+                                disabled={status === 'loading'}
+                                className={`group relative w-full flex justify-center py-4 px-4 border border-transparent text-sm sm:text-base font-extrabold rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-70 transition-all overflow-hidden ${isDark
+                                    ? 'text-slate-900 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 focus:ring-cyan-500 focus:ring-offset-[#111324] shadow-[0_0_15px_rgba(34,211,238,0.2)] hover:shadow-[0_0_25px_rgba(34,211,238,0.4)]'
+                                    : 'text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 focus:ring-indigo-500 focus:ring-offset-white shadow-md shadow-indigo-200/50'
+                                    }`}
+                            >
+                                <span className="relative z-10 flex items-center tracking-wide">
+                                    {status === 'loading' ? 'Assigning Agent...' : 'Send to HMC Recruiter'}
+                                    {!status === 'loading' && <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />}
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     );

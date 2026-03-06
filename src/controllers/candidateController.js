@@ -35,8 +35,34 @@ export const applyForJob = async (req, res, next) => {
         // Create the candidate record
         const candidate = candidateService.createCandidate(data);
 
-        // TODO: Future enhancement - Trigger Bolna outbound call API right here.
-        // For now, we will test by triggering the call manually via Bolna dashboard.
+        // Trigger the Bolna outbound call automatically
+        const bolnaApiKey = process.env.BOLNA_API_KEY;
+        const bolnaAgentId = process.env.BOLNA_AGENT_ID;
+
+        if (bolnaApiKey && bolnaAgentId) {
+            try {
+                // Dynamically import axios for the backend call
+                const axios = (await import('axios')).default;
+
+                // Bolna outbound call endpoint
+                await axios.post('https://api.bolna.dev/call', {
+                    agent_id: bolnaAgentId,
+                    recipient_phone_number: data.phone,
+                    // If your agent requires initial variables, you can pass them here via candidate_data: { name: data.name }
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${bolnaApiKey}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                console.log(`Successfully triggered Bolna call for candidate ${candidate.name} at ${data.phone}`);
+            } catch (bolnaError) {
+                console.error('Failed to trigger Bolna call. Continuing, but call must be done manually:', bolnaError?.response?.data || bolnaError.message);
+            }
+        } else {
+            console.warn('BOLNA_API_KEY or BOLNA_AGENT_ID missing in .env! Application saved but AI call not triggered automatically.');
+        }
 
         res.status(201).json({
             success: true,
