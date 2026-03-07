@@ -120,16 +120,16 @@ const DashboardPage = ({ theme }) => {
                                                     <div className="md:hidden mt-0.5">{getStatusBadge(candidate.status)}</div>
                                                 </div>
 
-                                                <div className={`mt-2 md:mt-3 flex items-center font-mono text-xs md:text-sm w-max px-3 md:px-3 py-1.5 rounded-lg border ${isDark ? 'text-slate-400 bg-[#0f1021]/60 border-slate-700' : 'text-gray-600 bg-gray-50 border-gray-100'}`}>
+                                                <div className={`mt-2 md:mt-3 flex items-center font-mono text-xs md:text-sm w-fit max-w-full px-3 md:px-3 py-1.5 rounded-lg border ${isDark ? 'text-slate-400 bg-[#0f1021]/60 border-slate-700' : 'text-gray-600 bg-gray-50 border-gray-100'}`}>
                                                     <PhoneCall className={`flex-shrink-0 mr-2 h-3.5 w-3.5 ${isDark ? 'text-cyan-500' : 'text-indigo-400'}`} />
-                                                    {candidate.phone}
+                                                    <span className="truncate">{candidate.phone}</span>
                                                 </div>
 
                                                 <div className={`mt-3 text-[10px] md:text-xs font-semibold uppercase tracking-widest ${isDark ? 'text-slate-500' : 'text-gray-400'}`}>
                                                     Applied {new Date(candidate.createdAt).toLocaleDateString()} at {new Date(candidate.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                                 </div>
 
-                                                <div className="mt-5 hidden md:block w-max">
+                                                <div className="mt-5 hidden md:block w-fit max-w-full">
                                                     {getStatusBadge(candidate.status)}
                                                 </div>
                                             </div>

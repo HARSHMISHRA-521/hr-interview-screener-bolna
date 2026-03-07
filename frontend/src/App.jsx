@@ -132,7 +132,7 @@ const App = () => {
         } else {
             document.body.classList.add('light-theme-active');
             document.body.classList.remove('dark-theme-active');
-            document.documentElement.style.backgroundColor = '#f8fafc';
+            document.documentElement.style.backgroundColor = ''; // Clear inline color, let CSS handle it completely
         }
     }, [theme]);
 
@@ -140,11 +140,11 @@ const App = () => {
 
     return (
         <Router>
-            <div className="flex-1 w-full max-w-[100vw] min-h-screen flex flex-col font-sans transition-colors duration-500 overflow-x-hidden relative">
+            <div className="h-full w-full max-w-full flex flex-col font-sans transition-colors duration-500 overflow-hidden relative">
                 <Navigation theme={theme} toggleTheme={toggleTheme} />
 
                 {/* Main Content Area */}
-                <main className="flex-1 w-full max-w-[100vw] flex flex-col relative pb-16 overflow-x-hidden">
+                <main className="flex-1 w-full max-w-full flex flex-col relative overflow-y-auto overflow-x-hidden">
                     <Routes>
                         <Route path="/" element={<ApplyPage theme={theme} />} />
                         <Route path="/dashboard" element={<DashboardPage theme={theme} />} />

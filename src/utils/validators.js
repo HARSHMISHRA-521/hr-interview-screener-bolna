@@ -8,7 +8,7 @@ export const applySchema = z.object({
     email: z.string().email('Invalid email address format'),
     phone: z.string()
         .min(10, 'Phone must be at least 10 characters long')
-        .max(15, 'Phone must not exceed 15 characters')
-        // Regex ensures it starts with + (optional) followed by digits
-        .regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number format. Must include country code, e.g., +1234567890')
+        .max(20, 'Phone must not exceed 20 characters')
+        // Regex ensures it starts with + followed by digits (valid E.164 Format emitted by react-phone-number-input)
+        .regex(/^\+[1-9]\d{6,14}$/, 'Invalid international phone number format')
 });

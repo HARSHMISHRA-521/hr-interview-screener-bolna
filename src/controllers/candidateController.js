@@ -23,14 +23,21 @@ export const applyForJob = async (req, res, next) => {
 
         const data = parsed.data;
 
-        // Check if candidate already applied (optional but good for UX)
-        const existing = candidateService.findByPhone(data.phone);
-        if (existing && existing.status === 'PENDING') {
-            return res.status(409).json({
-                success: false,
-                error: 'Candidate has already applied and is pending an interview.'
-            });
+        // Auto-format phone number for Bolna API (requires E.164 e.g., +919876543210)
+        let formattedPhone = data.phone.trim();
+        if (!formattedPhone.startsWith('+')) {
+            // Default to +91 (India) if 10 digits are provided without a country code
+            const digits = formattedPhone.replace(/\D/g, '');
+            if (digits.length === 10) {
+                formattedPhone = '+91' + digits;
+            } else {
+                formattedPhone = '+' + digits;
+            }
+        } else {
+            // Just clean up whitespace or special characters except the '+'
+            formattedPhone = '+' + formattedPhone.replace(/\D/g, '');
         }
+        data.phone = formattedPhone;
 
         // Create the candidate record
         const candidate = candidateService.createCandidate(data);
@@ -58,7 +65,14 @@ export const applyForJob = async (req, res, next) => {
 
                 console.log(`Successfully triggered Bolna call for candidate ${candidate.name} at ${data.phone}`);
             } catch (bolnaError) {
-                console.error('Failed to trigger Bolna call. Continuing, but call must be done manually:', bolnaError?.response?.data || bolnaError.message);
+                const errorMessage = bolnaError?.response?.data?.message || bolnaError?.response?.data || bolnaError.message;
+                console.error('Failed to trigger Bolna call:', errorMessage);
+
+                // Return a 400 error to the frontend so the user can see exactly why Bolna blocked the call
+                return res.status(400).json({
+                    success: false,
+                    error: `Bolna API Rejected Call: ${errorMessage}`
+                });
             }
         } else {
             console.warn('BOLNA_API_KEY or BOLNA_AGENT_ID missing in .env! Application saved but AI call not triggered automatically.');
